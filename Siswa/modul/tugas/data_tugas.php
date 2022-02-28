@@ -53,7 +53,7 @@
 
                       <table class="table table-striped">
                         <tr>
-                          <th>Jenis Tugas</th>
+                          <th style="width: 220px">Jenis Tugas</th>
                           <th>:</th>
                           <th> <?=$t['jenis_tugas'] ?></th>
                         </tr>
@@ -93,12 +93,24 @@ $tgldb=$t['tanggal'];
                          echo "<b class='badge badge-pill badge-danger'>Belum dikerjakan</b>";
                             ?>
                          <p></p>
-                          <a href="?page=tugas&act=upload&tugas=<?php echo $t[id_tugas];?>&id=<?php echo $t[id_jenistugas];?>&jenis=<?php echo $t[jenis_tugas];?>" class="btn btn-light"><i class="fa fa-pencil"></i> Kerjakan</a>
+                          <a href="?page=tugas&act=upload&tugas=<?php echo $t['id_tugas'];?>&id=<?php echo $t['id_jenistugas'];?>&jenis=<?php echo $t['jenis_tugas'];?>" class="btn btn-light"><i class="fa fa-pencil"></i> Kerjakan</a>
                        <a href="../Report/tugas/download_tugas.php?tugas=<?php echo $t[id_tugas] ?>&kelas=<?php echo $_SESSION[kelas] ?>&jurusan=<?php echo $_SESSION[jurusan] ?> " class="btn btn-light" target="_blank"><i class="fa fa-download"></i> Download</a> 
                         
                         <?php
                         }else{
-                          echo "<b class='badge badge-pill badge-success'>Sudah dikerjakan</b>";
+                          $tugas_dikerjakan = mysqli_fetch_assoc($cektugas);
+                          if ($tugas_dikerjakan['nilai'] <= 0) {
+                              echo "<b class='badge badge-pill badge-success'>Sudah dikerjakan</b>";
+                              echo "<b class='badge badge-pill badge-warning ml-2'>Belum dinilai</b>";
+                          } else { ?>
+                            <table class="table table-striped">
+                              <tr>
+                                <th style="width: 220px">Nilai</th>
+                                <th>:</th>
+                                <th><?= $tugas_dikerjakan['nilai'] ?></th>
+                              </tr>
+                            </table>
+                          <?php }
                         }
 
                        

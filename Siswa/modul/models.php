@@ -61,7 +61,7 @@ if(in_array($file_ext, $allowed_ext) === true){
 if($file_size < 30440700){
 $lokasi = '../vendor/file/tugas'.'TUGAS-INDIVIDU_'.$nama.'.'.$file_ext;
 move_uploaded_file($file_tmp, $lokasi);
-$in = mysqli_query($con,"INSERT INTO tugas_siswa VALUES ('NULL','$_POST[id_tugas]','$subjek',$_POST[id_siswa],'','$nama','$file_ext','$file_size','$lokasi','$date','$_POST[ket]')");
+$in = mysqli_query($con,"INSERT INTO tugas_siswa VALUES (null,'$_POST[id_tugas]','$subjek',$_POST[id_siswa],'','$nama','$file_ext','$file_size','$lokasi','$date','$_POST[ket]', 0)");
 
 if($in){
 

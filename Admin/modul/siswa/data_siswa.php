@@ -7,6 +7,7 @@
             <div class="card">
                 <div class="card-body">
                 <p class="card-description">
+                <a href="../Report/siswa/data_siswa.php" class="btn btn-warning text-white pull-right ml-2"><i class="fa fa-print"></i> Cetak</a>
                 <a href="?page=siswa&act=add" class="btn btn-info text-white pull-right"><i class="fa fa-plus"></i> Add</a> <br>
                 </p>
                 <h4 class="card-title">Data Siswa</h4>

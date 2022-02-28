@@ -109,6 +109,7 @@ foreach ($sqldataTugas as $t)
 								<th>Nis</th>
 								<th>Nama Siswa</th>
 								<th>Status & File Tugas</th>
+								<th>Nilai</th>
 							</tr>
 						</thead>
 						<tbody>
@@ -118,7 +119,9 @@ foreach ($sqldataTugas as $t)
 							$siswaKelasa = mysqli_query($con,"SELECT * FROM tb_siswa
 								WHERE id_kelas='$_GET[kelas]' AND id_jurusan='$_GET[jurusan]'
 								");
-								foreach ($siswaKelasa as $sk) { ?>
+								foreach ($siswaKelasa as $sk) { 
+								$rowId = 'row-' . $sk['nis'] . '-' . time();
+								?>
 							<tr>
 								<td><b><?=$nomor++; ?> .</b></td>
 								<td><?=$sk['nis'];?></td>
@@ -140,7 +143,7 @@ foreach ($sqldataTugas as $t)
 											echo '<br />';
 											echo $dt['kelompok'];
 
-											echo ' <a href='. $dt['file']. ' class="badge badge-pill badge-success" target="_blank"><i class="fa fa-download"></i> Download</a>';
+											echo ' <a href='. $dt['file']. ' class=" badge badge-pill badge-success" target="_blank"><i class="fa fa-download"></i> Download</a>';
 									
 
 										}else{
@@ -154,6 +157,17 @@ foreach ($sqldataTugas as $t)
 
 								<!-- 	<a href="<?=$s['file'];?>" class="badge badge-pill badge-success"><i class="fa fa-download"></i> Download</a> -->
 								</td>
+								<td id="<?= $rowId ?>">
+									<?php 
+									if ($cek > 0) {
+										if ($dt['nilai'] <= 0) { ?>
+											<button type="button" class="btn btn-success" data-id-tugas-siswa="<?= $dt['id_tgssiswa'] ?>"
+											data-nis="<?= $sk['nis'] ?>" data-parent-el="<?= $rowId ?>" data-nama="<?= $sk['nama_siswa'] ?>" onclick="beriNilai(this)">Beri Nilai</button>
+										<?php } else { 
+											echo $dt['nilai'];
+										} 
+									}  ?>
+								</td>
 							</tr>
 						<?php } ?>
 						</tbody>
@@ -166,4 +180,52 @@ foreach ($sqldataTugas as $t)
 		</div>
 	</div>
 </div>
+<!-- Modal -->
+<div class="modal fade" id="modal-beri-nilai" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Model Perangkat</h4>
+      </div>
+      <div class="modal-body">
+		<div class="form-group">
+			<label for="modal-nis" class="col-form-label">NIS :</label>
+			<input type="text" class="form-control" id="modal-nis" readonly="">
+		</div>
+		<div class="form-group">
+			<label for="modal-nama" class="col-form-label">Nama Siswa :</label>
+			<input type="text" class="form-control" id="modal-nama" readonly="">
+		</div>
+		<div class="form-group">
+			<label for="modal-nilai" class="col-form-label">Nilai Diberikan (0 - 100) :</label>
+			<input type="number" class="form-control" id="modal-nilai" value="0">
+		</div>
+	  </div>	
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-success" id="simpan-nilai" onclick="simpanNilai(this)">Simpan</button>
+      </div>
+    </div>
+  </div>
+</div>
+<script type="text/javascript">
+	function beriNilai(e) {
+		$('#modal-beri-nilai').modal('show');
+
+		document.getElementById('modal-nis').value = e.dataset.nis;
+		document.getElementById('modal-nama').value = e.dataset.nama;
+		document.getElementById('simpan-nilai').dataset.idTugasSiswa = e.dataset.idTugasSiswa;
+		document.getElementById('simpan-nilai').dataset.parentEl = e.dataset.parentEl;
+	}
+
+	function simpanNilai(e) {
+		let nilai = document.getElementById('modal-nilai').value;
+
+		$.post('./modul/tugas/simpan_nilai.php', { id: e.dataset.idTugasSiswa, nilai: nilai })
+			.done(function (data) {
+				$('#modal-beri-nilai').modal('hide');
+				document.getElementById(document.getElementById('simpan-nilai').dataset.parentEl).innerHTML = `<span>${nilai}</span>`;
+			});
+	}
+</script>
 
